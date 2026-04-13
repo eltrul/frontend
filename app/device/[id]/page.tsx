@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";  // ← thêm useCallback
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -31,52 +31,20 @@ export default function DevicePage({
    const { isAuthenticated, user, authState } = useAuth();
    const router = useRouter();
    const [backendAvailable, setBackendAvailableState] = useState<boolean>(true);
-   const [userSettings, setUserSettings] = useState<
-      IUserSettings | undefined | false
-   >(undefined);
-   const [device, setDevice] = useState<IDeviceConstructor | null | undefined>(
-      undefined,
-   );
+   const [userSettings, setUserSettings] = useState<IUserSettings | undefined | false>(undefined);
+   const [device, setDevice] = useState<IDeviceConstructor | null | undefined>(undefined);
    const { setTheme } = useTheme();
 
-   useEffect(() => {
-      (async () => {
-         const available = await isBackendAvailable();
-         if (!available) {
-            setBackendAvailableState(false);
-            return;
-         }
-
-         const token = localStorage.getItem("token") || "";
-
-         const userSettingsRes = await new UsersClass().getUserSettings();
-         if (!userSettingsRes) {
-            localStorage.clear();
-            setUserSettings(false);
-            return;
-         }
-         setUserSettings(userSettingsRes[0].data);
-         setTheme(userSettingsRes[0].data.theme);
-
-         const deviceRes = await new Devices().getDeviceMetadata(id, token);
-         console.log(deviceRes);
-         if (!deviceRes) {
-            setBackendAvailableState(false);
-            return;
-         }
-         setDevice(deviceRes);
-      })();
-   }, [id]);
-
+   // ← XÓA useEffect cũ (IIFE), chỉ giữ cái này
    const fetchDeviceData = useCallback(async (isInitial = false) => {
       const available = await isBackendAvailable();
       if (!available) {
          setBackendAvailableState(false);
          return;
       }
-   
+
       const token = localStorage.getItem("token") || "";
-   
+
       if (isInitial) {
          const userSettingsRes = await new UsersClass().getUserSettings();
          if (!userSettingsRes) {
@@ -87,18 +55,18 @@ export default function DevicePage({
          setUserSettings(userSettingsRes[0].data);
          setTheme(userSettingsRes[0].data.theme);
       }
-   
+
       const deviceRes = await new Devices().getDeviceMetadata(id, token);
+      console.log(deviceRes);
       if (!deviceRes) {
          setBackendAvailableState(false);
          return;
       }
       setDevice(deviceRes);
    }, [id]);
-   
+
    useEffect(() => {
       fetchDeviceData(true);
-   
       const interval = setInterval(() => fetchDeviceData(false), 5000);
       return () => clearInterval(interval);
    }, [fetchDeviceData]);
@@ -115,22 +83,14 @@ export default function DevicePage({
                style={{ animationDuration: "3s" }}
             />
             <div className="flex flex-col items-center gap-2 text-center">
-               <p className="text-sm font-medium">
-                  Không thể kết nối đến máy chủ
-               </p>
-               <p className="text-xs text-muted-foreground">
-                  Vui lòng thử lại sau.
-               </p>
+               <p className="text-sm font-medium">Không thể kết nối đến máy chủ</p>
+               <p className="text-xs text-muted-foreground">Vui lòng thử lại sau.</p>
             </div>
          </div>
       );
    }
 
-   if (
-      authState === false ||
-      userSettings === undefined ||
-      device === undefined
-   ) {
+   if (authState === false || userSettings === undefined || device === undefined) {
       return (
          <div className="flex items-center justify-center min-h-screen">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -141,37 +101,29 @@ export default function DevicePage({
    if (!isAuthenticated) return <LoginForm />;
    if (device === null) notFound();
 
-   setTimeout(() => (window.location.href = window.location.href), 60000);
+   // ← XÓA setTimeout ở đây
+
    return (
       <div className="min-h-screen bg-background">
          <DashboardHeader />
          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
             <div className="mb-8 space-y-4">
                <Link href="/">
-                  <Button
-                     variant="ghost"
-                     className="gap-2 pl-0 hover:pl-2 transition-all"
-                  >
+                  <Button variant="ghost" className="gap-2 pl-0 hover:pl-2 transition-all">
                      <ArrowLeft className="h-4 w-4" />
                      Quay lại
                   </Button>
                </Link>
                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                     <h1 className="text-2xl font-bold tracking-tight">
-                        {device.deviceName}
-                     </h1>
+                     <h1 className="text-2xl font-bold tracking-tight">{device.deviceName}</h1>
                      <p className="text-muted-foreground">{device.deviceId}</p>
                   </div>
                   <Badge
                      variant={isOnline ? "default" : "secondary"}
                      className={`${isOnline ? "bg-success text-success-foreground" : ""} text-sm py-1.5 px-3`}
                   >
-                     {isOnline ? (
-                        <Wifi className="mr-1.5 h-4 w-4" />
-                     ) : (
-                        <WifiOff className="mr-1.5 h-4 w-4" />
-                     )}
+                     {isOnline ? <Wifi className="mr-1.5 h-4 w-4" /> : <WifiOff className="mr-1.5 h-4 w-4" />}
                      {isOnline ? "Trực tuyến" : "Ngoại tuyến"}
                   </Badge>
                </div>
