@@ -68,6 +68,41 @@ export default function DevicePage({
       })();
    }, [id]);
 
+   const fetchDeviceData = useCallback(async (isInitial = false) => {
+      const available = await isBackendAvailable();
+      if (!available) {
+         setBackendAvailableState(false);
+         return;
+      }
+   
+      const token = localStorage.getItem("token") || "";
+   
+      if (isInitial) {
+         const userSettingsRes = await new UsersClass().getUserSettings();
+         if (!userSettingsRes) {
+            localStorage.clear();
+            setUserSettings(false);
+            return;
+         }
+         setUserSettings(userSettingsRes[0].data);
+         setTheme(userSettingsRes[0].data.theme);
+      }
+   
+      const deviceRes = await new Devices().getDeviceMetadata(id, token);
+      if (!deviceRes) {
+         setBackendAvailableState(false);
+         return;
+      }
+      setDevice(deviceRes);
+   }, [id]);
+   
+   useEffect(() => {
+      fetchDeviceData(true);
+   
+      const interval = setInterval(() => fetchDeviceData(false), 5000);
+      return () => clearInterval(interval);
+   }, [fetchDeviceData]);
+
    const isOnline = device?.latestRecordSendDate !== -1;
 
    if (!backendAvailable) {
