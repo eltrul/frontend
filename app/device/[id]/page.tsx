@@ -71,7 +71,7 @@ export default function DevicePage({
       return () => clearInterval(interval);
    }, [fetchDeviceData]);
 
-   const isOnline = device?.latestRecordSendDate !== -1;
+   const isOnline = (new Date().getTime() / 1000) - device?.latestRecordSendDate < (60 * 5) ;
 
    if (!backendAvailable) {
       return (
