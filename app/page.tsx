@@ -10,6 +10,7 @@ import { isBackendAvailable } from "@/lib/core";
 import { IUserSettings } from "@/lib/typings/users/IUserSettings";
 import { Users } from "@/lib/core/users/users";
 import { useTheme } from "next-themes";
+import { Firebase } from "@/lib/core/firebase/firebase";
 
 export default function Home() {
    const { isAuthenticated, user, authState } = useAuth();
@@ -73,7 +74,13 @@ export default function Home() {
    }
 
    if (!isAuthenticated) return <LoginForm />;
+   
 
+   useEffect(() => {
+      const firebase = new Firebase() 
+      firebase.requestToken().then(console.log).catch(console.error)
+   })
+   
    return (
       <div className="min-h-screen bg-background">
          <DashboardHeader />
