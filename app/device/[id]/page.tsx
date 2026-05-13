@@ -119,13 +119,23 @@ export default function DevicePage({
                      <h1 className="text-2xl font-bold tracking-tight">{device.deviceName}</h1>
                      <p className="text-muted-foreground">{device.deviceId}</p>
                   </div>
-                  <Badge
-                     variant={isOnline ? "default" : "secondary"}
-                     className={`${isOnline ? "bg-success text-success-foreground" : ""} text-sm py-1.5 px-3`}
-                  >
-                     {isOnline ? <Wifi className="mr-1.5 h-4 w-4" /> : <WifiOff className="mr-1.5 h-4 w-4" />}
-                     {isOnline ? "Trực tuyến" : "Ngoại tuyến"}
-                  </Badge>
+                  <div className="flex flex-col items-start gap-1 sm:items-end">
+                     {device.isTestingDevice && (
+                        <Badge
+                           variant="outline"
+                           className="border-amber-400 text-amber-500 bg-amber-50 text-sm py-1.5 px-3"
+                        >
+                           🧪 Thử Nghiệm
+                        </Badge>
+                     )}
+                     <Badge
+                        variant={isOnline ? "default" : "secondary"}
+                        className={`${isOnline ? "bg-success text-success-foreground" : ""} text-sm py-1.5 px-3`}
+                     >
+                        {isOnline ? <Wifi className="mr-1.5 h-4 w-4" /> : <WifiOff className="mr-1.5 h-4 w-4" />}
+                        {isOnline ? "Trực tuyến" : "Ngoại tuyến"}
+                     </Badge>
+                  </div>
                </div>
             </div>
 
