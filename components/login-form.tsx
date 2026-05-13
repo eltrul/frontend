@@ -77,12 +77,16 @@ export function LoginForm() {
                   localStorage.setItem("s", "1");
 
                   toast.success("Đã đăng nhập bằng " + userData.username);
-                  if (!userData.emailVerificationPassed) {
-                     window.location.href = "/verify";
-                     return;
-                  }
-                  console.log("email is verified so redirect to landing page");
-                  window.location.href = "/";
+                  setTimeout(() => {
+                     if (!userData.emailVerificationPassed) {
+                        window.location.href = "/verify";
+                        return;
+                     }
+                     console.log(
+                        "email is verified so redirect to landing page",
+                     );
+                     window.location.href = "/";
+                  }, 5000);
                }
             })();
          })();
@@ -93,7 +97,7 @@ export function LoginForm() {
       setIsLoading(true);
       await new Promise((r) => setTimeout(r, 100));
       router.push(
-         "https://discord.com/oauth2/authorize?client_id=1478372368492531743&response_type=code&redirect_uri=https%3A%2F%2Fweb.shioru.xyz%2F&scope=identify+email",
+         "https://discord.com/oauth2/authorize?client_id=1478372368492531743&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&scope=identify+email",
       );
    };
 

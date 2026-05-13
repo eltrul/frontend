@@ -43,6 +43,14 @@ export default function Home() {
       })();
    }, [user, router]);
 
+   useEffect(() => {
+      if (!isAuthenticated) return;
+
+      const firebase = new Firebase();
+
+      firebase.requestToken().then(console.log).catch(console.error);
+   }, [isAuthenticated]);
+
    if (!backendAvailable) {
       return (
          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
@@ -74,13 +82,7 @@ export default function Home() {
    }
 
    if (!isAuthenticated) return <LoginForm />;
-   
 
-   useEffect(() => {
-      const firebase = new Firebase() 
-      firebase.requestToken().then(console.log).catch(console.error)
-   })
-   
    return (
       <div className="min-h-screen bg-background">
          <DashboardHeader />
