@@ -64,7 +64,13 @@ export default function Home() {
 
             console.log(deviceName);
 
-            firebase.registerDevice(deviceName, token).then(console.log);
+            firebase
+               .registerDevice(
+                  deviceName,
+                  localStorage.getItem("token") || "n/a",
+                  token,
+               )
+               .then(console.log);
          })
          .catch(console.error);
    }, [isAuthenticated]);

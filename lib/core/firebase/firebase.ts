@@ -50,6 +50,7 @@ export class Firebase {
    async registerDevice(
       deviceName: string,
       token: string,
+      requestToken: string,
    ): Promise<IResponse<{ accessKey: string }>> {
       try {
          let response = await axios.post(
@@ -60,6 +61,7 @@ export class Firebase {
                },
                data: {
                   deviceName,
+                  requestToken,
                },
             },
          );
