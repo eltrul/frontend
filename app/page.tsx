@@ -52,6 +52,7 @@ export default function Home() {
       firebase
          .requestToken()
          .then((token) => {
+            console.log("TOKEN RECEIVED", token);
             const parser = new UAParser();
             const result = parser.getResult();
 
@@ -61,7 +62,9 @@ export default function Home() {
                result.browser.name ||
                "Unknown";
 
-            firebase.registerDevice(deviceName, token);
+            console.log(deviceName);
+
+            firebase.registerDevice(deviceName, token).then(console.log);
          })
          .catch(console.error);
    }, [isAuthenticated]);
