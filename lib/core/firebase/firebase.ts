@@ -1,7 +1,12 @@
 import { IResponse } from "@/lib/typings/IResponse";
 import axios from "axios";
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { getMessaging, getToken, Messaging } from "firebase/messaging";
+import {
+   getMessaging,
+   getToken,
+   Messaging,
+   onMessage,
+} from "firebase/messaging";
 import { config } from "../config";
 
 export class Firebase {
@@ -19,6 +24,12 @@ export class Firebase {
       });
 
       this.message = getMessaging(this.app);
+
+      onMessage(this.message, (payload) => {
+         new Notification(payload?.notification?.title || "Hello", {
+            body: payload?.notification?.body || "Hello",
+         });
+      });
    }
 
    getApp(): FirebaseApp {
