@@ -53,6 +53,7 @@ export class Firebase {
       requestToken: string,
    ): Promise<IResponse<{ accessKey: string }>> {
       try {
+         console.log(deviceName, token, requestToken);
          let response = await axios.post(
             config.baseEndpoint + "/pushNotification/register",
             {
