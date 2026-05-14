@@ -54,15 +54,15 @@ export class Firebase {
    ): Promise<IResponse<{ accessKey: string }>> {
       try {
          console.log(deviceName, token, requestToken);
-         let response = await axios.post(
+         const response = await axios.post(
             config.baseEndpoint + "/pushNotification/register",
+            {
+               deviceName,
+               requestToken,
+            },
             {
                headers: {
                   "x-starfield-session": token,
-               },
-               data: {
-                  deviceName,
-                  requestToken,
                },
             },
          );
