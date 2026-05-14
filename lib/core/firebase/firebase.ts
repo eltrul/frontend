@@ -1,5 +1,8 @@
+import { IResponse } from "@/lib/typings/IResponse";
+import axios from "axios";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getMessaging, getToken, Messaging } from "firebase/messaging";
+import { config } from "../config";
 
 export class Firebase {
    public app: FirebaseApp;
@@ -33,15 +36,55 @@ export class Firebase {
          "/firebase-messaging-sw.js",
       );
 
-      await navigator.serviceWorker.ready;
+      const readyRegistration = await navigator.serviceWorker.ready;
 
       const token = await getToken(this.message, {
          vapidKey:
             "BJbtOwvcE41J8cRNDqCFi-ahe--HYlO2UHFwSFuqYyAU04aeTcMP5X52SfB3rce_BVtxHyJf8r1i_GajHtlCZWY",
-
-         serviceWorkerRegistration: registration,
+         serviceWorkerRegistration: readyRegistration,
       });
 
       return token;
+   }
+
+   async registerDevice(
+      deviceName: string,
+      token: string,
+   ): Promise<IResponse<{ accessKey: string }>> {
+      try {
+         let response = await axios.get(
+            config.baseEndpoint + "/pushNotification/register",
+            {
+               headers: {
+                  "x-starfield-session": token,
+               },
+               data: {
+                  deviceName,
+               },
+            },
+         );
+
+         if (!response.data) {
+            throw new Error();
+         }
+
+         let data = response.data as
+            | IResponse<{ accessKey: string }>
+            | undefined;
+
+         if (!data) {
+            throw new Error();
+         }
+
+         return data;
+      } catch {
+         return {
+            errors: [
+               {
+                  message: "failed to send request.",
+               },
+            ],
+         };
+      }
    }
 }

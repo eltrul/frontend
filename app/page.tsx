@@ -11,6 +11,7 @@ import { IUserSettings } from "@/lib/typings/users/IUserSettings";
 import { Users } from "@/lib/core/users/users";
 import { useTheme } from "next-themes";
 import { Firebase } from "@/lib/core/firebase/firebase";
+import { UAParser } from "ua-parser-js";
 
 export default function Home() {
    const { isAuthenticated, user, authState } = useAuth();
@@ -48,7 +49,21 @@ export default function Home() {
 
       const firebase = new Firebase();
 
-      firebase.requestToken().then(console.log).catch(console.error);
+      firebase
+         .requestToken()
+         .then((token) => {
+            const parser = new UAParser();
+            const result = parser.getResult();
+
+            const deviceName =
+               result.device.model ||
+               result.os.name ||
+               result.browser.name ||
+               "Unknown";
+
+            firebase.registerDevice(deviceName, token);
+         })
+         .catch(console.error);
    }, [isAuthenticated]);
 
    if (!backendAvailable) {
