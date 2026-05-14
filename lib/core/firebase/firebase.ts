@@ -52,7 +52,7 @@ export class Firebase {
       token: string,
    ): Promise<IResponse<{ accessKey: string }>> {
       try {
-         let response = await axios.get(
+         let response = await axios.post(
             config.baseEndpoint + "/pushNotification/register",
             {
                headers: {
