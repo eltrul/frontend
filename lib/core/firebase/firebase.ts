@@ -58,7 +58,7 @@ export class Firebase {
             config.baseEndpoint + "/pushNotification/register",
             {
                deviceName,
-               requestToken,
+               secret: requestToken,
             },
             {
                headers: {
