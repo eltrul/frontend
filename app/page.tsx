@@ -56,11 +56,16 @@ export default function Home() {
             const parser = new UAParser();
             const result = parser.getResult();
 
+            const parts = [
+               result.device.vendor, // e.g. "Apple", "Samsung"
+               result.device.model, // e.g. "iPhone", "Galaxy S21"
+               result.os.name, // e.g. "iOS", "Windows"
+               result.os.version, // e.g. "17.0", "11"
+               result.browser.name, // e.g. "Chrome", "Safari"
+            ].filter(Boolean);
+
             const deviceName =
-               result.device.model ||
-               result.os.name ||
-               result.browser.name ||
-               "Unknown";
+               parts.length > 0 ? parts.join(" ") : "Unknown Device";
 
             console.log(deviceName);
 
