@@ -26,6 +26,7 @@ export class Firebase {
       this.message = getMessaging(this.app);
 
       onMessage(this.message, (payload) => {
+         console.log("NOTIFICATION RECEIVED", payload);
          new Notification(payload?.notification?.title || "Hello", {
             body: payload?.notification?.body || "Hello",
          });
