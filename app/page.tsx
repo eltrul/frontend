@@ -23,11 +23,6 @@ export default function Home() {
    const { theme, setTheme } = useTheme();
 
    useEffect(() => {
-      console.log("i good :D")
-      localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiIwMTllMjQxZC03MTNlLTcwMDAtOTg1Yi04MmQ3MTIzYjQxY2UiLCJzZXNzaW9uT3duZXJJZCI6IjAxOWUyMTIwLTM3MDQtNzAwMC1hZjYzLTQ0YTQwMTdhZDhiOCIsImNyZWF0ZURhdGUiOjE3Nzg3MjIzNjksImlzQ2xvc2VkIjpmYWxzZSwiSVBBZGRyZXNzIjoiMS4xLjEuMSIsImdlb0xvY2F0aW9uIjoiWy0zMy40OTQsMTQzLjIxMDRdIiwiX2lkIjoiNmEwNTI2NDExMDdmNzU0YmM1NDJhMzM0IiwiX192IjowLCJpYXQiOjE3Nzg3MjIzNjl9.pTdkm6z1PXKoWN9peafR-8Ob-x-cfsH3jp4HrbJQVsA")
-      localStorage.setItem("userData", '{"_id":"6a04625ca7bd53b4311fb928","userId":"019e2120-3704-7000-af63-44a4017ad8b8","username":"literaryaturtle","displayName":"eo chua","email":"d.oragamerff@gmail.com","preSignInSetupCompleted":true,"authType":"oauth","configurationObjectId":"019e2120-3704-7001-9dc1-bb21cfddd765","emailVerificationPassed":true,"emailVerificationCode":"0e06af988b8600b08cccac85ddd9321a0d79daed7085de70d07b87587e05dafd","emailLatestRequestDate":1778672221,"hashedPassword":"$argon2id$v=19$m=65536,t=2,p=1$Aqh5Dz8NqUIW1++Y4+aUWToqDuqiAhtzntLbNJ5dqGY$J4lMOAUYL3meyIuI9MkONQE+FenmLX4Z1vlSzGiFM+c","avatar":"https://cdn.discordapp.com/avatars/1330431331057799209/f27c041b0067fc00c9ea3aa5658cfe19.png","createDate":1778672219,"isBanned":0,"banPeroid":0,"role":["1"],"__v":0}') 
-      localStorage.setItem("s", 1)
-      localStorage.setItem("settingsObjectId", "019e2120-3704-7001-9dc1-bb21cfddd765")
       if (user && !user.emailVerificationPassed) {
          router.push("/verify");
       }
